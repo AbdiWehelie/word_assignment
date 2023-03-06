@@ -8,16 +8,16 @@ import WordSpace from "./components/wordSpace";
 function App() {
   
   const [words,setWords]=useState([])
-  const [count, setCount] = useState(0);
   const [randomNumber, setRandomNumber] = useState(0)
   const [guess, setGuess]=useState('')
   const [alphabet,setAlphabet]=useState([])
+  const [hidden,setHidden]=useState([])
 
 
  useEffect( ()=>{
   const myMarkdownFile = require("./words.txt");
-  setCount((count) => count + 1);
-
+  
+  
   // setGuess('a')
 
   fetch(myMarkdownFile)
@@ -30,17 +30,18 @@ function App() {
     
   })
 
+  
   const alpha = Array.from(Array(26)).map((e, i) => i + 65);
 setAlphabet(alpha.map((x) => String.fromCharCode(x)))
 console.log(alphabet);
  
-  
+setRandomNumber(Math.floor(Math.random() * 1431)) 
  
 },[])
 
 const generateRandomNumber = () => {
   const random = Math.floor(Math.random() * words[0].length);
-  
+  setGuess('')
   setRandomNumber(random)
   console.log("Random num: "+randomNumber);
 }
@@ -59,7 +60,7 @@ function pickLetter(letter){
           return(<button onClick={()=>pickLetter(letter)}>{letter}</button>)
       })
       }
-      <p> Value of Count: {count} </p>
+      
       <button onClick={generateRandomNumber}>Random Number</button>
       
        {words.map((words,index)=>{
@@ -71,6 +72,7 @@ function pickLetter(letter){
         </div>
         )
       })} 
+      
     </div>
   );
 }
