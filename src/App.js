@@ -56,19 +56,14 @@ function pickLetter(letter){
   return (
     <div className="App">
       <h1>Assignment prework</h1>
-      {alphabet.map((letter,index)=>{
-          return(<button onClick={()=>pickLetter(letter)}>{letter}</button>)
-      })
-      }
-      
-      <button onClick={generateRandomNumber}>Random Number</button>
+      <button onClick={generateRandomNumber}>Change word</button>
       
        {words.map((words,index)=>{
         return(
         <div>
           Picked word: {words[randomNumber]}
           <p>Word length: {words[randomNumber].length-1}</p>
-         <WordSpace guess={guess} Chosen={words[randomNumber]} Length={words[randomNumber].length-1}/>
+         <WordSpace Alphabet={alphabet} guess={guess} Chosen={words[randomNumber]} Length={words[randomNumber].length-1}/>
         </div>
         )
       })} 

@@ -1,56 +1,62 @@
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 import { useEffect,useState } from 'react';
 export default function WordSpace(props){
     
     const [hidden,setHidden]=useState([])
+    const [correctGuesses, setCorrectGuesses] = useState(["a",'e'])
+    const [wrong,setWrong]= useState(0)
+    const [guess, setGuess]=useState('')
+    const [isDisabled,setIsDisabled]=useState(false)
 
-    // console.log(props.Chosen);
-    // console.log(props.Chosen.length);
-    // console.log(props.guess);
+    
     
     useEffect(()=>{
         const word=props.Chosen.replace("\r","")
         let test="_".repeat(word.length)
-       console.log(typeof(test));
         setHidden(test)
         console.log("Hidden word: "+hidden);
-    },[])
 
-    function replaceCharacter(index, replacement) {
-        
-          let newWord=test.slice(0, index) +
-          replacement +
-          test.slice(index + replacement.length)
-        console.log(newWord);
-        test=newWord
-      }
+        // setGuess(props.guess.toLowerCase())
+
+        if(word.includes(guess)){
+          setCorrectGuesses([...correctGuesses, guess])
+        }
+
+        else{
+          setWrong(wrong+1)
+        }
+      console.log(correctGuesses);
+
       
 
-   function updateLetter(index) {
-    const letter=props.guess
-    console.log(index);
-    console.log(typeof(letter));
-    // const newEntry=test.replaceAt(index,letter)    
-    // setHidden(newEntry)
-   }
 
-    const word=props.Chosen.replace("\r","")
-    let test="_".repeat(word.length)
+    },[guess])
+
+      const word=props.Chosen.replace("\r","")
+      
+
+      function revealLetter() {
+        const maskedWord =word.split('').map(letter => correctGuesses.includes(letter) ? letter : "_").join(" ");
+        return maskedWord
+      }
+
+      function pickLetter(letter){
+        setGuess(letter.toLowerCase())
+        console.log(guess);
+      }
+   
+      
     return(
         
-       
-        
-        [...word].map((letter,index)=>{
-            
-            if(props.guess.toLowerCase() === letter){
-                //updateLetter(index)
-                replaceCharacter(index,letter)
-            }
-            
-            return(<li style={{listStyleType: 'none', display:"inline"}}> {hidden} </li>) 
-            
-            
-            
-            
-        })
+       <div>
+
+      {props.Alphabet.map((letter,index)=>{
+          return(<button key={letter} id={letter} onClick={()=>pickLetter(letter)}>{letter}</button>)
+      })
+      }
+
+        <h3>Wrongs: {wrong} </h3>
+        {revealLetter(word)}
+        </div>
     )
 }
