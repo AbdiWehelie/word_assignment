@@ -11,7 +11,10 @@ function App() {
   const [randomNumber, setRandomNumber] = useState(0)
   const [guess, setGuess]=useState('')
   const [alphabet,setAlphabet]=useState([])
-  const [hidden,setHidden]=useState([])
+  const [reset,setReset]=useState(false)
+  //const [hidden,setHidden]=useState([])
+
+
 
 
  useEffect( ()=>{
@@ -24,8 +27,8 @@ function App() {
   .then(response => response.text())
   .then(text =>{ 
     const fileLines = text.split('\n')
-    console.log(typeof(text))
-    console.log(fileLines)
+    // console.log(typeof(text))
+    // console.log(fileLines)
     setWords([fileLines])
     
   })
@@ -33,20 +36,26 @@ function App() {
   
   const alpha = Array.from(Array(26)).map((e, i) => i + 65);
 setAlphabet(alpha.map((x) => String.fromCharCode(x)))
-console.log(alphabet);
+// console.log(alphabet);
  
-setRandomNumber(Math.floor(Math.random() * 1431)) 
- 
+setRandomNumber(Math.floor(Math.random() * 4000)) 
+ setReset(false)
 },[])
 
+
+
+
 const generateRandomNumber = () => {
-  const random = Math.floor(Math.random() * words[0].length);
-  setGuess('')
-  setRandomNumber(random)
-  console.log("Random num: "+randomNumber);
+  // const random = Math.floor(Math.random() * words[0].length);
+  // setGuess('')
+  // setRandomNumber(random)
+  // setReset(true)
+  // console.log("rand function check: "+reset);
+  // console.log("Random num: "+randomNumber);
+  window.location.reload();
 }
 
-//console.log(words[0].length);
+
 
 function pickLetter(letter){
   setGuess(letter)
@@ -63,7 +72,7 @@ function pickLetter(letter){
         <div>
           Picked word: {words[randomNumber]}
           <p>Word length: {words[randomNumber].length-1}</p>
-         <WordSpace Alphabet={alphabet} guess={guess} Chosen={words[randomNumber]} Length={words[randomNumber].length-1}/>
+         <WordSpace Alphabet={alphabet} guess={guess} Chosen={words[randomNumber]} Reset={reset} Length={words[randomNumber].length-1}/>
         </div>
         )
       })} 
