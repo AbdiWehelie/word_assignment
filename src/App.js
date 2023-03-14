@@ -11,8 +11,7 @@ function App() {
   const [randomNumber, setRandomNumber] = useState(0)
   const [guess, setGuess]=useState('')
   const [alphabet,setAlphabet]=useState([])
-  const [reset,setReset]=useState(false)
-  //const [hidden,setHidden]=useState([])
+
 
 
 
@@ -21,62 +20,48 @@ function App() {
   const myMarkdownFile = require("./words.txt");
   
   
-  // setGuess('a')
-
+  
+  //fetches the wordlist from the text file and stores it in an array where a word will be picked at random
+  //the words are also split from each new line so each word is its seperate item
   fetch(myMarkdownFile)
   .then(response => response.text())
   .then(text =>{ 
     const fileLines = text.split('\n')
-    // console.log(typeof(text))
-    // console.log(fileLines)
+    
     setWords([fileLines])
     
   })
 
-  
+  //creates an array of letters that are used to guess the word
   const alpha = Array.from(Array(26)).map((e, i) => i + 65);
-setAlphabet(alpha.map((x) => String.fromCharCode(x)))
-// console.log(alphabet);
+  setAlphabet(alpha.map((x) => String.fromCharCode(x)))
+
  
-setRandomNumber(Math.floor(Math.random() * 4000)) 
- setReset(false)
+ setRandomNumber(Math.floor(Math.random() * 4000)) 
+
 },[])
 
 
 
-
-const generateRandomNumber = () => {
-  // const random = Math.floor(Math.random() * words[0].length);
-  // setGuess('')
-  // setRandomNumber(random)
-  // setReset(true)
-  // console.log("rand function check: "+reset);
-  // console.log("Random num: "+randomNumber);
+//refreshes page to give a new word
+const resetGame = () => {
   window.location.reload();
 }
 
-
-
-function pickLetter(letter){
-  setGuess(letter)
-  console.log(guess);
-}
-
+//passes the alphabet array and the chosen word in the word array
   return (
-    <div className="App">
-      <h1>Assignment prework</h1>
-      <button onClick={generateRandomNumber}>Change word</button>
+    <div className="wrapper">
       
        {words.map((words,index)=>{
         return(
         <div>
-          Picked word: {words[randomNumber]}
-          <p>Word length: {words[randomNumber].length-1}</p>
-         <WordSpace Alphabet={alphabet} guess={guess} Chosen={words[randomNumber]} Reset={reset} Length={words[randomNumber].length-1}/>
+         <WordSpace Alphabet={alphabet} guess={guess} Chosen={words[randomNumber]}/>
         </div>
         )
-      })} 
-      
+      })}
+      <div style={{marginTop: '12px'}}>
+      <button onClick={resetGame}>Change word</button>
+      </div>
     </div>
   );
 }

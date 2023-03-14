@@ -1,76 +1,68 @@
-//import { isDisabled } from '@testing-library/user-event/dist/utils';
 import { useEffect,useState } from 'react';
 import {Container } from 'react-bootstrap';
 export default function WordSpace(props){
     
     
+    //the words have additonal characters that need to be removed with .replace()
     const word=props.Chosen.replace("\r","")
+
+    //used to create a reversed string so the hints will start at the first letter
     const reverseString = str => str ? [...str].reverse().join("") : str;
-    //const [hidden,setHidden]=useState([])
+
+
+
     const [correctGuesses, setCorrectGuesses] = useState([])
     const [usedLetter,setUsedLetter]= useState([])
     const [wrong,setWrong]= useState(0)
     const [guess, setGuess]=useState('')
     const [hints, setHints]=useState(0)
-    const [childReset,setChildReset]=useState(false)
     
 
     
     
     useEffect(()=>{
         const word=props.Chosen.replace("\r","")
-        //let test="_".repeat(word.length)
-        //setHidden(test)
-        // console.log("Hidden word: "+hidden);
-        setHints(Math.ceil(word.length/3))
-        console.log("No# of hints: "+ hints);
-        console.log(usedLetter);
-        // setGuess(props.guess.toLowerCase())
+        
+        // sets a number of hints based on how long a word is
+        setHints(Math.ceil(word.length/3)+1)
+        
 
+
+
+        //if guessed letter is found in word
         if(word.includes(guess)){
           setCorrectGuesses([...correctGuesses, guess])
           setUsedLetter([...usedLetter, guess])
         }
 
+        //if guessed letter is not found in the word
         else{
           setWrong(wrong+1)
           setUsedLetter([...usedLetter, guess])
         }
-      // console.log(correctGuesses);
+      
 
       
-      console.log("Before check: "+childReset);
       
 
 
     },[guess])
 
-      useEffect(()=>{
-        setChildReset(props.Reset)
-        if(childReset){
-          setCorrectGuesses([])
-          setUsedLetter([])
-          setHints(Math.floor(word.length/3))
-          setWrong(0)
-          setChildReset(false)
-          console.log("After check: "+childReset);
-        }
-      },[])
       
-
+      //iterates through the word and displays any correct guesses in the correct spot 
       function revealLetter() {
         const maskedWord =word.split('').map(letter => correctGuesses.includes(letter) ? letter : "_").join(" ");
         return maskedWord
       }
 
 
-
+      // when a letter on the board is clicked, sets the guess to 
       function pickLetter(letter){
         setGuess(letter.toLowerCase())
-        console.log(guess);
       }
 
 
+      //gives hints based on the number determined by the word's length and goes down each use
       function giveHint(){
         let array=reverseString(word)
         array.split('').map((letter,index)=>{
@@ -82,10 +74,8 @@ export default function WordSpace(props){
         })
       }
 
-   
+      //if a letter is used, makes the button disabled since it doesn't need to be pused again
       function disableButton(letter) {
-        // console.log("disableButton result for: " +letter);
-        // console.log(usedLetter.some((x)=>x===letter.toLowerCase()));
         return usedLetter.some((x)=>x===letter.toLowerCase())
       }
 
@@ -93,24 +83,28 @@ export default function WordSpace(props){
       
     return(
         
-       <div>
-        <Container style={{width:"90vw"}}>
+       <div >
+        <Container style={{width:"90%",margin:"auto",color: "#05003D"}}>
+        <h2 className='word'>{revealLetter(word)}</h2>
+        {!revealLetter(word).includes("_") &&  <p><h3>You won!</h3></p>
+        
+        }
+        {wrong >0 && !revealLetter(word).includes("_") ? <h3>You made {wrong} wrong guesses </h3> 
+        : !revealLetter(word).includes("_")&& <h2 style={{color:"#ad9b1ff7"}}>Perfect!</h2>}
       {props.Alphabet.map((letter,index)=>{
           return(<button variant="info" className="letterButton" key={letter} disabled={disableButton(letter)} id={letter} onClick={()=>pickLetter(letter)}>{letter}</button>)
       })
       }
       </Container>
       <br/>
-        <button disabled={hints>0 ? false :true} onClick={()=>giveHint()}>Hint</button>
+      <br/>
+      <br/>
+          <Container className='information'>    
+              <button className='hintBtn' disabled={hints>0 ? false :true} onClick={()=>giveHint()}>Hint</button>
+              <h3>Hints left: {hints} </h3>
+              <h3>Wrongs: {wrong} </h3>
+          </Container>
         
-        
-        <h3>Wrongs: {wrong} </h3>
-        {revealLetter(word)}
-        {!revealLetter(word).includes("_") &&  <p>You won!</p>
-        
-        }
-        {wrong >0 && !revealLetter(word).includes("_") ? <h3>You made {wrong} wrong guesses </h3> 
-        : !revealLetter(word).includes("_")&& <h2>Perfect!</h2>}
         </div>
     )
 }
