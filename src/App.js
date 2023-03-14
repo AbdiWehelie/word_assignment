@@ -9,7 +9,6 @@ function App() {
   
   const [words,setWords]=useState([])
   const [randomNumber, setRandomNumber] = useState(0)
-  const [guess, setGuess]=useState('')
   const [alphabet,setAlphabet]=useState([])
 
 
@@ -55,7 +54,7 @@ const resetGame = () => {
        {words.map((words,index)=>{
         return(
         <div>
-         <WordSpace Alphabet={alphabet} guess={guess} Chosen={words[randomNumber]}/>
+         <WordSpace Alphabet={alphabet} Chosen={words[randomNumber]}/>
         </div>
         )
       })}
